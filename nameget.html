@@ -3,7 +3,6 @@
 <head>
     <title>Enter Your Name</title>
     <meta charset="UTF-8">
-    <!-- ✅ Mobile responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -83,6 +82,15 @@
     <div id="errorMsg"></div>
 
     <script>
+        // Function to get query parameter from URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Get type from URL (?type=...)
+        const type = getQueryParam("type") || "saved";
+
         function openApp() {
             const nameInput = document.getElementById("nameInput");
             const name = nameInput.value.trim();
@@ -96,7 +104,11 @@
 
             errorMsg.style.display = "none";
             const encodedName = encodeURIComponent(name);
-            window.location.href = "datagatterapp://open?partems=" + encodedName;
+            const encodedType = encodeURIComponent(type);
+
+            // Build and launch the deep link
+            const deepLink = "datagatterapp://open?partems=" + encodedName + "&type=" + encodedType;
+            window.location.href = deepLink;
         }
     </script>
 </body>
