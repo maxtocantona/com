@@ -1,4 +1,5 @@
 {
-  "latest_version": "3",
-  "update_link": "https://masterclassroom.github.io/Developers/apps.html"
+  "latest_version": 4,
+  "latestVersionName": "1.2.0",
+  "update_link": "https://example.com/app.apk"
 }
