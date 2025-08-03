@@ -35,47 +35,96 @@
       margin-top: 20px;
       display: inline-block;
     }
+    #dlcount {
+      margin-top: 10px;
+      color: #444;
+      font-weight: bold;
+    }
   </style>
-</head>
-<body>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  <div id="content">
-    <h2>Loading...</h2>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC3TawidTEkY318dTUXX4WDkZTMWiSQ24Y",
+      authDomain: "storage-b0f0c.firebaseapp.com",
+      databaseURL: "https://storage-b0f0c-default-rtdb.firebaseio.com",
+      projectId: "storage-b0f0c",
+      storageBucket: "storage-b0f0c.appspot.com",
+      messagingSenderId: "240490334618",
+      appId: "1:240490334618:web:73f77de6ff9ab18e339223"
+    };
 
-  <script>
-    // Function: Hex → String
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function formatCount(count) {
+      if (count >= 1_000_000_000) return Math.floor(count / 1_000_000_000) + "B+";
+      if (count >= 1_000_000) return Math.floor(count / 1_000_000) + "M+";
+      if (count >= 1_000) return Math.floor(count / 1_000) + "K+";
+      return count.toString();
+    }
+
     function fromHex(hex) {
       try {
-        return hex.match(/.{1,2}/g)
-          .map(byte => String.fromCharCode(parseInt(byte, 16)))
-          .join('');
+        return hex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
       } catch (e) {
         return "";
       }
     }
 
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const appFile = params.get("app");
     const iconURL = params.get("png") || "default-icon.png";
     const descriptionHex = params.get("des") || "";
-    const description = fromHex(descriptionHex); // Decode here
+    const appId = params.get("appId") || "unknown";
+    const description = fromHex(descriptionHex);
+
+    const countRef = ref(db, `downloads/${appId}`);
 
     if (appFile && appFile.endsWith(".apk")) {
-      const appName = appFile.replace(".apk", "")
-        .replaceAll("_", " ")
-        .replace(/\b\w/g, l => l.toUpperCase());
+      const appName = appFile.replace(".apk", "").replaceAll("_", " ").replace(/\b\w/g, l => l.toUpperCase());
 
       document.getElementById("content").innerHTML = `
         <img src="${iconURL}" onerror="this.src='default-icon.png'">
         <h2>${appName}</h2>
         <p>${description}</p>
-        <a class="button" href="${appFile}" download>Download APK</a>
+        <a class="button" id="downloadBtn">Download APK</a>
+        <div id="dlcount">Downloads: Loading...</div>
       `;
+
+      const btn = document.getElementById("downloadBtn");
+      const countText = document.getElementById("dlcount");
+
+      onValue(countRef, snapshot => {
+        const count = snapshot.val() || 0;
+        countText.innerText = "Downloads: " + formatCount(count);
+      });
+
+      btn.addEventListener("click", () => {
+        // Check if this appId is already in localStorage
+        const downloadedApps = JSON.parse(localStorage.getItem("downloadedApps") || "[]");
+
+        if (!downloadedApps.includes(appId)) {
+          // First time download on this device
+          runTransaction(countRef, current => (current || 0) + 1);
+          downloadedApps.push(appId);
+          localStorage.setItem("downloadedApps", JSON.stringify(downloadedApps));
+        }
+
+        // Proceed to download
+        btn.setAttribute("href", appFile);
+        btn.setAttribute("download", "");
+      });
+
     } else {
       document.getElementById("content").innerHTML = "<p>App not found.</p>";
     }
   </script>
-
+</head>
+<body>
+  <div id="content">
+    <h2>Loading...</h2>
+  </div>
 </body>
 </html>
