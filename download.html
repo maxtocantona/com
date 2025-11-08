@@ -130,7 +130,6 @@ function fromHex(hex){
   catch(e){ return ""; }
 }
 
-// Get URL params
 const params = new URLSearchParams(location.search);
 const appFile = params.get("app");
 const iconURL = params.get("png") || "default-icon.png";
@@ -138,7 +137,6 @@ const descriptionHex = params.get("des") || "";
 const appId = params.get("appId") || "unknown";
 const photosParam = params.get("photos") || "[]";
   
-
 const description = fromHex(descriptionHex);
 let photos = [];
 try { photos = JSON.parse(decodeURIComponent(photosParam)); } catch(e){ photos = []; }
@@ -161,7 +159,8 @@ if(appFile && appFile.endsWith(".apk")){
       <p>${description}</p>
       ${photosHTML}
       <a class="button" id="downloadBtn">Download APK</a>
-      <a class="button" onclick="window.history.back()">Back</a>    <div id="dlcount">Downloads: Loading...</div>
+      <a class="button" onclick="window.history.back()">Back</a>
+      <div id="dlcount">Downloads: Loading...</div>
     </div>
 
     <div id="overlay">
@@ -174,6 +173,12 @@ if(appFile && appFile.endsWith(".apk")){
 
   const btn = document.getElementById("downloadBtn");
   const countText = document.getElementById("dlcount");
+
+  // ✅ Check if app already downloaded
+  const downloadedApps = JSON.parse(localStorage.getItem("downloadedApps")||"[]");
+  if(downloadedApps.includes(appId)){
+    btn.innerText = "Update App"; // 👈 Bedel qoraalka
+  }
 
   onValue(countRef, snapshot=>{
     const count = snapshot.val()||0;
@@ -189,6 +194,7 @@ if(appFile && appFile.endsWith(".apk")){
     }
     btn.setAttribute("href",appFile);
     btn.setAttribute("download","");
+    btn.innerText = "Update App"; // ✅ Kadib marka la soo dejiyo, bedel qoraalka
   });
 
   // Gallery logic
@@ -225,5 +231,6 @@ if(appFile && appFile.endsWith(".apk")){
   document.body.innerHTML = "<div id='content'><p>App not found.</p></div>";
 }
 </script>
+  
 </body>
 </html>
