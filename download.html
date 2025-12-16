@@ -10,16 +10,16 @@
 <style>
   body {
     font-family: sans-serif;
-    background: #f0f2f5;
+    background: #081b29;
     padding: 30px;
     text-align: center;
     margin:0;
+    color: #fff;
   }
   h2 {
     margin: 10px 0;
   }
   p {
-    color: #333;
     margin: 10px auto;
     max-width: 320px;
   }
@@ -35,7 +35,6 @@
   }
   #dlcount {
     margin-top: 10px;
-    color: #444;
     font-weight: bold;
   }
   .photo-grid {
@@ -101,11 +100,20 @@
   50%  { box-shadow: 0 0 35px 15px #2575fc; }
   100% { box-shadow: 0 0 50px 25px #ff00ff; }
 }
-  .ab {
-    position: relative;
-    botttom: 0;
-  }
+  footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #081b29;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  border-top: 1px solid #0ef;
+}
 </style>
+    
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -174,7 +182,9 @@ if(appFile && appFile.endsWith(".apk")){
       <span class="nav-btn next">&#10095;</span>
       <div class="close-btn">Close</div>
     </div>
-    <p class="ab">&copy maxtocantona 2025</p>
+  <footer>
+  &copy; 2025 maxtocantona. All rights reserved.
+</footer>
   `;
 
   const btn = document.getElementById("downloadBtn");

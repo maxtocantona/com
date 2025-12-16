@@ -10,32 +10,28 @@
 <style>
   body {
     font-family: sans-serif;
-    background: #f8f9fa;
+    background: #081b29;
     padding: 20px;
+    color: #fff;
   }
   h2 {
     text-align: center;
     margin-bottom: 30px;
   }
   .app-card {
-    background: white;
+    background: transparent;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px 2px #0ef;
     padding: 16px;
     margin-bottom: 20px;
     transition: transform 0.2s, border 0.3s;
-    border: 2px solid transparent;
+    
   }
   .app-card:hover {
     transform: scale(1.02);
   }
   .app-card.focused {
-    border: 2px solid red;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 15px 3px #11ff66; }
-  50%  { box-shadow: 0 0 35px 15px #2575fc; }
-  100% { box-shadow: 0 0 50px 25px #ff00ff; }
+    border: 2px solid #0ef;
   }
   .app-content {
     display: flex;
@@ -57,13 +53,28 @@
   .download-count {
     margin-top: 8px;
     font-size: 14px;
-    color: #444;
   }
+  footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #081b29;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  border-top: 1px solid #0ef;
+}
 </style>
 </head>
 <body>
 <h2>All apps</h2>
 <div id="app-list"></div>
+  <footer>
+  &copy; 2025 maxtocantona. All rights reserved.
+</footer>
+  </body>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -124,6 +135,9 @@ apps.forEach(app=>{
         <div class="download-count" id="count-${app.id}">Downloads: ...</div>
       </div>
     </a>
+  <footer>
+  
+  
   `;
   container.appendChild(div);
 
