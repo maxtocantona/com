@@ -3,21 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Maxtocantona apps</title>
-  <link rel="icon" type="image/png" href="maxtocantona.png">
-  <link rel="shortcut icon" href="maxtocantona.png" type="image/png">
+<link rel="icon" type="image/png" href="maxtocantona.png">
+<link rel="shortcut icon" href="maxtocantona.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="all apps MaxtoCantona. it here.">
+
 <style>
   body {
     font-family: sans-serif;
     background: #081b29;
     padding: 20px;
     color: #fff;
+    margin: 0;
+    padding-bottom: 90px;
   }
+
   h2 {
     text-align: center;
     margin-bottom: 30px;
   }
+
   .app-card {
     border: 2px solid #fff;
     background: transparent;
@@ -25,19 +30,20 @@
     padding: 16px;
     margin-bottom: 20px;
     transition: transform 0.2s, border 0.3s;
-    
   }
+
   .app-card.focused {
     box-shadow: 0 0 20px 2px #0ef;
     border-color: #0ef;
   }
+
   .app-content {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: inherit;
-    
   }
+
   .app-card img {
     width: 64px;
     height: 64px;
@@ -47,134 +53,153 @@
     border: 3px solid #0ef;
     box-shadow: 0 0 20px 2px #0ef;
   }
+
   .app-card h3 {
     margin: 0;
     font-size: 18px;
   }
+
   .download-count {
     margin-top: 8px;
     font-size: 14px;
   }
-  footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #081b29;
-  color: #fff;
-  text-align: center;
-  padding: 10px 0;
-  font-size: 14px;
-  border-top: 1px solid #0ef;
-}
+
+  footer.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #081b29;
+    color: #fff;
+    text-align: center;
+    padding: 12px 10px;
+    font-size: 14px;
+    border-top: 1px solid #0ef;
+    z-index: 9999;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .footer-links a {
+    color: #0ef;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
 </style>
 </head>
+
 <body>
-<h2>All apps</h2>
-<div id="app-list"></div>
-  <footer>
-  &copy; 2026 maxtocantona. All rights reserved.
-</footer>
-  </body>
+  <h2>All apps</h2>
+  <div id="app-list"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  <footer class="site-footer">
+    <div>&copy; 2026 maxtocantona. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="about.html?mode=about">About</a>
+      <a href="about.html?mode=contact">Contact</a>
+      <a href="about.html?mode=services">Services</a>
+    </div>
+  </footer>
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCPYQs_cTU5trpelLBB1D51YbdQSsVILZA",
-  authDomain: "molten-turbine-447909-m3.firebaseapp.com",
-  databaseURL: "https://molten-turbine-447909-m3-default-rtdb.firebaseio.com",
-  projectId: "molten-turbine-447909-m3",
-  storageBucket: "molten-turbine-447909-m3.firebasestorage.app",
-  messagingSenderId: "607843677651",
-  appId: "1:607843677651:web:a6cc228585c6c2e29a6b26"
-};
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPYQs_cTU5trpelLBB1D51YbdQSsVILZA",
+      authDomain: "molten-turbine-447909-m3.firebaseapp.com",
+      databaseURL: "https://molten-turbine-447909-m3-default-rtdb.firebaseio.com",
+      projectId: "molten-turbine-447909-m3",
+      storageBucket: "molten-turbine-447909-m3.firebasestorage.app",
+      messagingSenderId: "607843677651",
+      appId: "1:607843677651:web:a6cc228585c6c2e29a6b26"
+    };
 
-function formatCount(count){
-  if(count >= 1_000_000_000) return Math.floor(count/1_000_000_000)+"B+";
-  if(count >= 1_000_000) return Math.floor(count/1_000_000)+"M+";
-  if(count >= 1_000) return Math.floor(count/1_000)+"K+";
-  return count.toString();
-}
-function toHex(str){
-  return [...str].map(c=>c.charCodeAt(0).toString(16)).join('');
-}
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-// Apps array with multiple photos
-const apps = [
-  {
-    id:"EfutCards",
-    name:"EfutCards",
-    apk:"EfutCards.apk",
-    description:"With this app you can create high-quality efootball-like cards.",
-    image:"EfutCards.png",
-    photos:["efut1.png","efut2.png","efut3.png"]
-  }
-  
-];
-
-const container = document.getElementById("app-list");
-const urlParams = new URLSearchParams(window.location.search);
-let focusedAppId = urlParams.get('focus') || null;
-
-apps.forEach(app=>{
-  const hexDes = toHex(app.description);
-  const href = `download.html?app=${encodeURIComponent(app.apk)}&png=${encodeURIComponent(app.image)}&des=${hexDes}&appId=${app.id}&photos=${encodeURIComponent(JSON.stringify(app.photos))}`;
-
-  const div = document.createElement("div");
-  div.className = "app-card";
-  div.innerHTML = `
-    <a href="#" class="app-content">
-      <img src="${app.image}" alt="${app.name}" onerror="this.src='default-icon.png'">
-      <div>
-        <h3>${app.name}</h3>
-        <div class="download-count" id="count-${app.id}">Downloads: ...</div>
-      </div>
-    </a>
-  <footer>
-  
-  
-  `;
-  container.appendChild(div);
-
-  // Initial focus
-  if(focusedAppId && focusedAppId === app.id){
-    div.classList.add("focused");
-    div.scrollIntoView({behavior:"smooth", block:"center"});
-  }
-
-  // Click handler
-  div.querySelector(".app-content").addEventListener("click", e=>{
-    e.preventDefault();
-    if(focusedAppId === app.id){
-      // Already focused → open download page
-      window.location.href = href;
-    } else {
-      // Focus change
-      const prev = document.querySelector(".app-card.focused");
-      if(prev) prev.classList.remove("focused");
-      div.classList.add("focused");
-      focusedAppId = app.id;
-      div.scrollIntoView({behavior:"smooth", block:"center"});
-
-      // Update URL query parameter without refreshing
-      const newUrl = window.location.pathname + '?focus=' + encodeURIComponent(app.id);
-      history.replaceState(null, '', newUrl);
+    function formatCount(count) {
+      if (count >= 1_000_000_000) return Math.floor(count / 1_000_000_000) + "B+";
+      if (count >= 1_000_000) return Math.floor(count / 1_000_000) + "M+";
+      if (count >= 1_000) return Math.floor(count / 1_000) + "K+";
+      return count.toString();
     }
-  });
 
-  // Firebase download count
-  const countRef = ref(db,"downloads/"+app.id);
-  onValue(countRef, snapshot=>{
-    const count = snapshot.val()||0;
-    document.getElementById("count-"+app.id).innerText = "Downloads: "+formatCount(count);
-  });
-});
-</script>
+    function toHex(str) {
+      return [...str].map(c => c.charCodeAt(0).toString(16)).join('');
+    }
+
+    const apps = [
+      {
+        id: "EfutCards",
+        name: "EfutCards",
+        apk: "EfutCards.apk",
+        description: "With this app you can create high-quality efootball-like cards.",
+        image: "EfutCards.png",
+        photos: ["efut1.png", "efut2.png", "efut3.png"]
+      }
+    ];
+
+    const container = document.getElementById("app-list");
+    const urlParams = new URLSearchParams(window.location.search);
+    let focusedAppId = urlParams.get('focus') || null;
+
+    apps.forEach(appItem => {
+      const hexDes = toHex(appItem.description);
+      const href = `download.html?app=${encodeURIComponent(appItem.apk)}&png=${encodeURIComponent(appItem.image)}&des=${hexDes}&appId=${appItem.id}&photos=${encodeURIComponent(JSON.stringify(appItem.photos))}`;
+
+      const div = document.createElement("div");
+      div.className = "app-card";
+      div.innerHTML = `
+        <a href="#" class="app-content">
+          <img src="${appItem.image}" alt="${appItem.name}" onerror="this.src='default-icon.png'">
+          <div>
+            <h3>${appItem.name}</h3>
+            <div class="download-count" id="count-${appItem.id}">Downloads: ...</div>
+          </div>
+        </a>
+      `;
+      container.appendChild(div);
+
+      if (focusedAppId && focusedAppId === appItem.id) {
+        div.classList.add("focused");
+        div.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      div.querySelector(".app-content").addEventListener("click", e => {
+        e.preventDefault();
+
+        if (focusedAppId === appItem.id) {
+          window.location.href = href;
+        } else {
+          const prev = document.querySelector(".app-card.focused");
+          if (prev) prev.classList.remove("focused");
+
+          div.classList.add("focused");
+          focusedAppId = appItem.id;
+          div.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          const newUrl = window.location.pathname + '?focus=' + encodeURIComponent(appItem.id);
+          history.replaceState(null, '', newUrl);
+        }
+      });
+
+      const countRef = ref(db, "downloads/" + appItem.id);
+      onValue(countRef, snapshot => {
+        const count = snapshot.val() || 0;
+        document.getElementById("count-" + appItem.id).innerText = "Downloads: " + formatCount(count);
+      });
+    });
+  </script>
 </body>
 </html>
